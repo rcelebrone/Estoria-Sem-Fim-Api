@@ -1,0 +1,105 @@
+openapi: 3.0.0
+info:
+  title: Livro API
+  version: 1.0.0
+servers:
+  - url: http://localhost:5000
+paths:
+  /books:
+    post:
+      summary: Cria um novo livro
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Nome do livro.
+                  example: "Livro de Exemplo"
+                  required: true
+      responses:
+        201:
+          description: Livro criado com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  book_id:
+                    type: string
+                    description: Identificador único do livro.
+                    example: "7b444444-4444-4444-4444-444444444444"
+        400:
+          description: Nome do livro é obrigatório.
+  /books/{book_id}/paragraphs:
+    post:
+      summary: Adiciona um novo parágrafo ao livro.
+      parameters:
+        - name: book_id
+          in: path
+          description: Identificador único do livro.
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+                  description: Texto do parágrafo.
+                  example: "Exemplo de parágrafo."
+                  required: true
+                position:
+                  type: integer
+                  description: Posição do parágrafo no livro.
+                  example: 1
+                  required: true
+      responses:
+        201:
+          description: Parágrafo adicionado com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  paragraph_id:
+                    type: string
+                    description: Identificador único do parágrafo.
+                    example: "7b444444-4444-4444-4444-444444444444"
+        404:
+          description: Livro não encontrado.
+        400:
+          description: Texto inválido ou posição é obrigatória.
+  /paragraphs/{paragraph_id}/votes:
+    post:
+      tags:
+        - Paragraphs
+      summary: Votar em um parágrafo
+      parameters:
+        - name: paragraph_id
+          in: path
+          description: ID do parágrafo a ser votado
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Voto bem-sucedido
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  votes:
+                    type: integer
+                    description: Número atual de votos
+        404:
+          description: Parágrafo não encontrado
+      security: []
